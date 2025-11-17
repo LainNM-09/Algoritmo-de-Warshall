@@ -1,0 +1,64 @@
+class Warshall:
+    def __init__(self, num_nodos):
+        self.num_nodos = num_nodos
+        self.matriz = [[i == j for j in range(num_nodos)] for i in range(num_nodos)]
+    
+    def agregar_arista(self, origen, destino):
+        self.matriz[origen][destino] = True
+    
+    def warshall(self):
+        for k in range(self.num_nodos):
+            for i in range(self.num_nodos):
+                for j in range(self.num_nodos):
+                    self.matriz[i][j] = self.matriz[i][j] or (self.matriz[i][k] and self.matriz[k][j])
+    
+    def imprimir_matriz(self):
+        print("\nMatriz de Alcanzabilidad (1=existe camino, 0=no existe):\n")
+        print("    ", end="")
+        for j in range(self.num_nodos):
+            print(f"{j:3}", end="")
+        print("\n    " + "-" * (3 * self.num_nodos))
+        for i in range(self.num_nodos):
+            print(f"{i:2} |", end="")
+            for j in range(self.num_nodos):
+                print(f"{'1' if self.matriz[i][j] else '0':>3}", end="")
+            print()
+    
+    def existe_camino(self, origen, destino):
+        return self.matriz[origen][destino]
+
+
+# Ejemplo de uso
+if __name__ == "__main__":
+    print("\n" + "="*50)
+    print("ALGORITMO DE WARSHALL - Clausura Transitiva")
+    print("="*50)
+    
+    # Crear grafo con 4 nodos
+    w = Warshall(4)
+    
+    # Agregar aristas
+    w.agregar_arista(0, 1)
+    w.agregar_arista(1, 2)
+    w.agregar_arista(2, 3)
+    w.agregar_arista(3, 1)
+    
+    print("\nAristas: 0->1, 1->2, 2->3, 3->1")
+    
+    print("\nMatriz ANTES de Warshall:")
+    w.imprimir_matriz()
+    
+    # Ejecutar algoritmo
+    w.warshall()
+    
+    print("\nMatriz DESPUÉS de Warshall:")
+    w.imprimir_matriz()
+    
+    # Verificar caminos
+    print("\n" + "="*50)
+    print("Verificación de caminos:")
+    print("="*50)
+    print(f"¿Camino de 0 a 3? {'Sí' if w.existe_camino(0, 3) else 'No'}")
+    print(f"¿Camino de 3 a 0? {'Sí' if w.existe_camino(3, 0) else 'No'}")
+    print(f"¿Camino de 1 a 3? {'Sí' if w.existe_camino(1, 3) else 'No'}")
+    print()
